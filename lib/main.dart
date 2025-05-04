@@ -28,7 +28,7 @@ class TodoHomePage extends StatefulWidget {
 }
 
 class _TodoHomePageState extends State<TodoHomePage> {
-  final List<String> _todos = []; // Daftar tugas
+  final List<String> _todos = []; 
   final TextEditingController _controller = TextEditingController(); // Untuk input teks
 
   void _addTodo() {
@@ -45,6 +45,43 @@ class _TodoHomePageState extends State<TodoHomePage> {
     setState(() {
       _todos.removeAt(index);
     });
+  }
+  void _editTodoDialog(int index) {
+    final editController = TextEditingController(text: _todos[index]);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Edit Catatan'),
+          content: TextField(
+            controller: editController,
+            decoration: const InputDecoration(
+              labelText: 'Ubah catatan',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final newText = editController.text.trim();
+                if (newText.isNotEmpty) {
+                  setState(() {
+                    _todos[index] = newText;
+                  });
+                }
+                Navigator.pop(context);
+              },
+              child: const Text('Simpan'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -83,11 +120,20 @@ class _TodoHomePageState extends State<TodoHomePage> {
                   return Card(
                     child: ListTile(
                       title: Text(_todos[index]),
-                      trailing: IconButton(
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () => _editTodoDialog(index),
+                          ),
+                          IconButton(
                         icon: const Icon(Icons.delete),
                         onPressed: () => _removeTodo(index),
                       ),
+                     ],
                     ),
+                   ),
                   );
                 },
               ),
