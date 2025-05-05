@@ -29,7 +29,7 @@ class TodoHomePage extends StatefulWidget {
 
 class _TodoHomePageState extends State<TodoHomePage> {
   final List<String> _todos = []; 
-  final TextEditingController _controller = TextEditingController(); // Untuk input teks
+  final TextEditingController _controller = TextEditingController(); 
 
   void _addTodo() {
     final text = _controller.text;
